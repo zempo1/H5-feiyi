@@ -1,0 +1,13 @@
+
+@use './variables.scss' as *;
+:root:root {
+  /* Tabbar */
+  --van-tabbar-background: #f4f1ea;
+  --van-tabbar-item-active-background: #e6b887;
+  --van-tabbar-item-active-color: $primary-color;
+  --van-tabbar-item-text-color: $primary-color;
+  --van-nav-bar-background: linear-gradient(90deg, #D09D69 0%, #E0C1A1 100%); 
+  --van-nav-bar-icon-color: #000;
+  --van-cell-icon-size: 8px;
+  /* 其他可根据实际需求继续补充 */
+}

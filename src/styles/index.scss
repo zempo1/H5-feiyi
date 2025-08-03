@@ -1,0 +1,123 @@
+@use './vant.scss' as *;
+@use './variables.scss' as *;
+
+
+// 常用mixin
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin card {
+  background: #fff;
+  border-radius: $border-radius;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 20px;
+}
+
+// 全局基础样式
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: $background-color;
+  color: $text-color;
+  -webkit-font-smoothing: antialiased;
+  overflow-y: auto;
+
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $primary-color;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+p {
+  margin: 0 0 16px 0;
+  line-height: 1.7;
+}
+
+a {
+  color: $primary-color;
+  text-decoration: none;
+  transition: color 0.2s;
+  &:hover {
+    color: $accent-color;
+  }
+}
+
+// 通用按钮
+.btn {
+  @include flex-center;
+  padding: 10px 24px;
+  border-radius: $border-radius;
+  background: $primary-color;
+  color: #fff;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &.accent {
+    background: $accent-color;
+    color: $primary-color;
+  }
+  &.outline {
+    background: transparent;
+    color: $primary-color;
+    border: 1.5px solid $primary-color;
+  }
+}
+
+// 卡片样式
+.card {
+  @include card;
+  margin-bottom: 20px;
+}
+
+// 输入框
+input, textarea {
+  border: 1px solid #e0e0e0;
+  border-radius: $border-radius;
+  padding: 10px 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  &:focus {
+    border-color: $primary-color;
+  }
+}
+#app {
+  max-width: 375px;   /* 10 rem，对应设计稿宽度 */
+  margin: 0 auto;
+}
+
+.sms-btn {
+  min-width: 90px;
+  margin-left: 8px;
+  padding: 0 8px;
+  font-size: 14px;
+  height: 32px;
+  border-radius: 16px;
+  background: #e6b877;
+  color: #4e3b23;
+  border: none;
+  &:disabled {
+    background: #f4e3c1;
+    color: #aaa;
+  }
+}
+
+.van-field__control {
+  font-size: 16px;
+}
+
+
+
+.van-cell {
+  margin-bottom: 6px;
+}
+
+
