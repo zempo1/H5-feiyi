@@ -6,3 +6,8 @@ $accent-color: #e6b877;  // 文化金
 $background-color: linear-gradient(135deg, #f4f1ea 60%, #e6b877 100%);
 $text-color: #222;
 $border-radius: 10px;
+
+//底部tabbar高度
+:root {
+    --tabbar-height:50px;
+}

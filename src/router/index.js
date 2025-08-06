@@ -41,6 +41,11 @@ const router = createRouter({
       component: () => import('@/views/postBar/postBar.vue')
     },
     {
+      path: '/publish',
+      name: 'publish',
+      component: () => import('@/views/postBar/publish.vue')
+    },
+    {
       path: '/my',
       name:'my',
       component: () => import('@/views/my/my.vue')

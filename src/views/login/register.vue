@@ -115,8 +115,8 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast,showSuccessToast } from 'vant'
 import 'vant/es/toast/style';
-import {apiSendCode,apiRegister} from '@/api/login'
-import {saveData} from '@/common/saveData.js'
+import {apiSendCode,apiRegister} from '@/api'
+import {saveData} from '@/utils/saveData'
 
 const router = useRouter()
 const loading = ref(false)
@@ -206,6 +206,9 @@ const goLogin = () => {
   padding: 20px;
 }
 
+.van-cell {
+  margin-bottom: 6px;
+}
 
 .register-form {
   background: #fff;

@@ -1,26 +1,40 @@
 <script setup>
-  import { ref, computed } from 'vue'
+  import { ref, computed,onMounted,nextTick} from 'vue'
   import { useRoute } from 'vue-router'
   import { useuserStore } from './stores/user';
   const userStore = useuserStore();
   const route = useRoute();
+const tabbar = ref();
+onMounted( async () => {
+  await nextTick();
   
+  if(tabbar.value && tabbar.value.$el.offsetHeight){
+    const tabbarHeight = tabbar.value.$el.offsetHeight;
+    console.log(tabbarHeight);
+    const root = document.documentElement;
+    root.style.setProperty('--tabbar-height', `${tabbarHeight}px`);
+  }
+
+})
+ 
   // 判断是否显示 tabbar
   const showTabbar = computed(() => {
     const loginRoutes = ['/', '/login', '/register', '/loginIndex'];
     return !loginRoutes.includes(route.path);
   });
+
 </script>
 
 <template>
   <router-view></router-view>
-  <van-tabbar route v-if="showTabbar">
+  <van-tabbar route v-if="showTabbar" ref="tabbar">
     <van-tabbar-item replace to="/index" icon="wap-home-o">首页</van-tabbar-item>
     <van-tabbar-item replace to="/resources" icon="tv-o">非遗资源</van-tabbar-item>
     <van-tabbar-item replace to="/study" icon="records-o">学习打卡</van-tabbar-item>
     <van-tabbar-item replace to="/postBar" icon="apps-o">社区</van-tabbar-item>
     <van-tabbar-item replace to="/my" icon="user-o">我的</van-tabbar-item>
   </van-tabbar>
+ 
 </template>
 
 <style lang="scss">

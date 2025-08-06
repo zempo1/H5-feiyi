@@ -142,8 +142,8 @@ import { ref, reactive,onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast, showSuccessToast } from 'vant'
 import 'vant/es/toast/style'
-import {apiLogin,apiLoginByCode,apiSendCode} from '@/api/login'
-import {saveData} from '@/common/saveData'
+import {apiLogin,apiLoginByCode,apiSendCode} from '@/api'
+import {saveData} from '@/utils/saveData'
 import Cookies from 'js-cookie'
 import CryptoJS from 'crypto-js'
 
@@ -253,7 +253,6 @@ const sendSmsCode = async () => {
 
 //账号登录
 const loginByPassword = async (data) => {
-    console.log(data);
     const { username, password } = data
     const phoneReg = /^1[3-9]\d{9}$/
     let loginType = 'username'
@@ -282,7 +281,6 @@ const onSubmit = async (data) => {
   if(loading.value) return;
   loading.value = true
   try {
-    console.log('登录信息:', data)
     const res = loginType.value === 'password' ? await loginByPassword(data) : await loginBySms(data)
     console.log(res);
     saveData(res.data)
@@ -331,6 +329,10 @@ const goRegister = () => {
 </script>
 
 <style lang="scss" scoped>
+.van-cell {
+  margin-bottom: 6px;
+}
+
 .login-bg {
   min-height: 100vh;
   display: flex;

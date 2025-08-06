@@ -14,8 +14,7 @@
 </template>
 
 <script setup>
-import {apiLogout} from "@/api/login";
-import {getMyInfo} from "@/api/user";
+import {apiLogout,getMyInfo} from "@/api";
 import { useuserStore } from "@/stores/user";
 import router from "@/router";
 const userStore = useuserStore();

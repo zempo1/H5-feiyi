@@ -27,7 +27,6 @@ instance.interceptors.request.use(
                 config.headers['Authorization'] = `Bearer ${refreshToken}`
             }
             else {
-                console.log('请求头中添加token');
                 config.headers['Authorization'] = `Bearer ${accessToken}`
             }
         }
