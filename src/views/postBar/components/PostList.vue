@@ -1,11 +1,12 @@
  <template>
-  <div class="post-list" ref="contentContainerRef" @scroll="onScroll" :style="contentStyle">
+  <div class="post-list"  :style="contentStyle">
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh" success-text="刷新成功" >
         <van-list
         v-model:loading="loading"
         :finished="finished"
         finished-text="没有更多了"
         @load="onLoad"
+        offset="10"
         >
           <div v-for="post in posts" :key="post.id" class="post-card">
             <!-- 用户信息 -->
@@ -119,7 +120,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['load'])
+const emit = defineEmits(['load','onRefresh'])
 onMounted(() => {
   console.log('props', props);
 })
@@ -148,6 +149,7 @@ const postActions = [
 const onRefresh = () => {
   // 模拟刷新
   console.log('刷新');
+  emit('onRefresh')
   setTimeout(() => {
     refreshing.value = false;
   }, 1000);
@@ -156,10 +158,10 @@ const onRefresh = () => {
 const onLoad = () => {
   // 模拟加载更多
   emit('load');
-  setTimeout(() => {
-    loading.value = false;
-    finished.value = true;
-  }, 1000);
+  // setTimeout(() => {
+  //   loading.value = false;
+  //   finished.value = true;
+  // }, 1000);
 };
 
 const showPostActions = (post) => {

@@ -2,12 +2,15 @@
 <template>
   <div class="register-bg">
     <van-nav-bar
-      title="用户注册"
       left-arrow
+      left-text="返回登录"
       safe-area-inset-top
       @click-left="goBack"
     />
     <div class="register-container">
+      <div class="avatar">
+        
+      </div>
       <van-form @submit="onSubmit" class="register-form">
         <van-cell-group inset>
           <van-field
@@ -215,6 +218,14 @@ const goLogin = () => {
   border-radius: 16px;
   padding: 24px 16px 16px 16px;
   box-shadow: 0 4px 20px rgba(78, 59, 35, 0.08);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  background: url('src/assets/icon/User-Circle.png') no-repeat center center;
+  border-radius: 50%;
+  margin: 0 auto 15px auto;
 }
 
 .register-btn-wrapper {

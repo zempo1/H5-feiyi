@@ -15,7 +15,7 @@
         <van-tabs v-model:active="activeTab" sticky :offset-top ="searchHeaderHeight" @click-tab="onClickTab">
           <van-tab ref="tabs" title="精华" name="essence">
             <div class="tab-content">
-              <post-list @load="onLoad" :posts="essencePosts" :searchHeaderHeight="searchHeaderHeight" :tabsHeight="tabsHeight" />
+              <post-list @load="onLoad" @onRefresh="onRefresh" :posts="essencePosts" :searchHeaderHeight="searchHeaderHeight" :tabsHeight="tabsHeight" />
             </div>
           </van-tab>
           <van-tab title="热门" name="hot">
@@ -102,8 +102,13 @@ class UIPost {
     essencePosts.value = [...essencePosts.value,...res.data.content]
     console.log(essencePosts.value);
   }
+
 }
 const uiPost = new UIPost();
+
+const onRefresh = () => {
+  console.log('子调用父方法');
+}
 
 const onLoad = () => {
   console.log('onLoad');
@@ -120,7 +125,7 @@ onMounted( async() => {
   tabsHeight.value = tabs.value.$el.offsetTop;
    uiPost.getPostList({
     page: 0,
-    size: 10
+    size: 5
   })
 });
 
@@ -200,18 +205,54 @@ const essencePosts = ref([
 
 const hotPosts = ref([
   {
-    id: 3,
-    avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    nickname: '校园达人',
-    time: '1小时前',
-    title: '如何制作传统剪纸艺术',
-    content: '剪纸艺术是中国传统文化的重要组成部分，今天教大家制作简单的窗花...',
-    images: ['https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'],
-    likes: 256,
-    comments: 45,
-    collections: 23,
-    isLiked: false,
-    isCollected: true
+     "id": 1943635217659072512,
+        "title": "看看潮汕英歌舞",
+        "content": "老铁们，今天和王力宏来到了潮汕潮安区，来看看这英歌舞这么个事",
+        "type": "IMAGE",
+        "status": "PUBLISHED",
+        "images": [
+            "https://loremflickr.com/400/400?lock=7326805739230008"
+        ],
+        "tags": [
+            "英歌舞",
+            "潮汕",
+            "甜妹"
+        ],
+        "viewCount": 0,
+        "likeCount": 0,
+        "commentCount": 0,
+        "shareCount": 0,
+        "isTop": false,
+        "isHot": false,
+        "createdAt": [
+            2025,
+            7,
+            11,
+            19,
+            35,
+            21,
+            543812000
+        ],
+        "updatedAt": [
+            2025,
+            7,
+            11,
+            19,
+            35,
+            21,
+            543812000
+        ],
+        "author": {
+            "id": 1939884796922695680,
+            "username": "mobile_13709670518",
+            "nickname": "Aseubel",
+            "avatar": null,
+            "level": 1,
+            "isActive": true
+        },
+        "interestTags": [],
+        "isLiked": false,
+        "isFollowingAuthor": false
   }
 ]);
 

@@ -5,7 +5,8 @@ import { showToast } from 'vant'
 import router from '@/router'
 import 'vant/es/toast/style';
 
-const baseUrl = 'http://8.134.200.160:20611'
+// const baseUrl = 'http://8.134.200.160:20611'
+const baseUrl = ''
 const userStore = useuserStore()
 
 const instance = axios.create({

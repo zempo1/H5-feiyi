@@ -84,6 +84,7 @@ const activeTab = ref('essence');
     const refreshing = ref(false);
 
     const onLoad = () => {
+      console.log('加载更多');
       setTimeout(() => {
         if (refreshing.value) {
           list.value = [];

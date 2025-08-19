@@ -59,6 +59,7 @@ const formData = ref({
     content: '',
     category: 'food',
     fileList: [],
+    images: []
 })
 
 const categoryOptions = [
@@ -75,6 +76,8 @@ const afterRead = async (file) => {
     fd.append('file', file.file);
     const res = await uploadImage(fd);
     console.log(res);
+    formData.value.images.push(res.data.imageUrl)
+    console.log(formData.value.images);
   // 这里可以上传到服务器，示例直接添加到 fileList
   // showToast('文件已添加');
 };
@@ -95,7 +98,8 @@ const onPublish = async () => {
   const res = await apiCreatePost({
     title: formData.value.title,
     content: formData.value.content,
-    type: 'TEXT'
+    type: 'TEXT',
+    images:formData.value.images
   })
   console.log(res);
   // 这里可以提交到后端
@@ -105,6 +109,7 @@ const onPublish = async () => {
   formData.value.content = '';
   formData.value.fileList = [];
   formData.value.category = '';
+  router.push('/postBar')
 };
 const goBack = () => {
     router.back()
