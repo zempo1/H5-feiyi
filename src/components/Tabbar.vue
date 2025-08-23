@@ -15,12 +15,12 @@
 
   const userStore = useuserStore();
   const route = useRoute();
- const tabbar = ref();
+ const tabbarRef = ref();
  onMounted( async () => {
    await nextTick();
-   
-   if(tabbar.value && tabbar.value.$el.offsetHeight){
-     const tabbarHeight = tabbar.value.$el.offsetHeight;
+   console.log(tabbarRef.value);
+   if(tabbarRef.value && tabbarRef.value.$el.offsetHeight){
+     const tabbarHeight = tabbarRef.value.$el.offsetHeight;
      console.log(tabbarHeight);
      const root = document.documentElement;
      root.style.setProperty('--tabbar-height', `${tabbarHeight}px`);
@@ -30,8 +30,8 @@
   
    // 判断是否显示 tabbar
    const showTabbar = computed(() => {
-     const loginRoutes = ['/', '/login', '/register', '/loginIndex'];
-     return !loginRoutes.includes(route.path);
+     const loginRoutes = ['/index', '/resources', '/study', '/postBar','/my'];
+     return loginRoutes.includes(route.path);
    });
    
    const active = ref(0)
@@ -46,7 +46,7 @@
 </script>
 
 <template>
-    <van-tabbar route v-if="showTabbar" ref="tabbar">
+    <van-tabbar route v-if="showTabbar" ref="tabbarRef" safe-area-inset-bottom fixed placeholder>
     <van-tabbar-item replace to="/index" >
       <span>首页</span>
       <template #icon="props">
@@ -79,3 +79,36 @@
     </van-tabbar-item>
    </van-tabbar>
 </template>
+
+<style lang="scss">
+ @media (min-width: 768px) {
+    :root:root {
+     --van-tabbar-height: 32px;
+     --van-tabbar-item-font-size: 8px;
+     --van-tabbar-item-icon-size: 12px;
+     --van-tabbar-item-line-height: 4px;
+     --van-tabbar-item-icon-margin-bottom: 4px;
+   }
+   .van-icon-img {
+      width: 12px;
+   }
+ }
+ @media (min-width: 1200px) {
+    :root:root {
+     --van-tabbar-height: 26px;
+     --van-tabbar-item-font-size: 4px;
+     --van-tabbar-item-icon-size: 8px;
+     --van-tabbar-item-line-height: 2px;
+     --van-tabbar-item-icon-margin-bottom: 2px;
+   }
+ }
+ @media (orientation: landscape) and (max-height: 600px) {
+   :root:root {
+     --van-tabbar-height: 26px;
+     --van-tabbar-item-font-size: 4px;
+     --van-tabbar-item-icon-size: 8px;
+     --van-tabbar-item-line-height: 2px;
+     --van-tabbar-item-icon-margin-bottom: 2px;
+   }
+ }
+</style>

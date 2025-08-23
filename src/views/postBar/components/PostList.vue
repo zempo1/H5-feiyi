@@ -3,10 +3,12 @@
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh" success-text="刷新成功" >
         <van-list
         v-model:loading="loading"
-        :finished="finished"
+        :finished="props.finished"
         finished-text="没有更多了"
         @load="onLoad"
+        :loading = "loading"
         offset="10"
+        :immediate-check="false"
         >
           <div v-for="post in posts" :key="post.id" class="post-card">
             <!-- 用户信息 -->
@@ -70,15 +72,7 @@
                 <van-icon name="chat-o" />
                 <span>{{ post.commentCount }}</span>
               </div>
-              
-              <div class="action-item" @click="toggleCollect(post)">
-                <van-icon 
-                  :name="post.isCollected ? 'star' : 'star-o'" 
-                  :class="{ 'collected': post.isCollected }"
-                />
-                <span>{{ post.collections }}</span>
-              </div>
-              
+
               <div class="action-item" @click="sharePost(post)">
                 <van-icon name="share-o" />
                 <span>分享</span>
@@ -103,6 +97,7 @@
 import { ref, reactive,onMounted,computed } from 'vue';
 import { showToast, showSuccessToast, showImagePreview } from 'vant';
 import {apiPostLike} from '@/api'
+import {debouncePromise} from '@/utils/tool'
 
 // Props
 const props = defineProps({
@@ -117,10 +112,18 @@ const props = defineProps({
   tabsHeight: {
     type: Number,
     default: 44
+  },
+  // 是否已加载完成
+  finished: {
+    type: Boolean,
+    default: false
   }
 });
 
 const emit = defineEmits(['load','onRefresh'])
+
+const loading = defineModel('loading',{type:Boolean,default:false}) // 加载状态
+
 onMounted(() => {
   console.log('props', props);
 })
@@ -133,8 +136,6 @@ const contentStyle = computed(() => {
 
 // 响应式数据
 const refreshing = ref(false);
-const loading = ref(false);
-const finished = ref(false);
 const showActions = ref(false);
 const currentPost = ref(null);
 
@@ -158,10 +159,6 @@ const onRefresh = () => {
 const onLoad = () => {
   // 模拟加载更多
   emit('load');
-  // setTimeout(() => {
-  //   loading.value = false;
-  //   finished.value = true;
-  // }, 1000);
 };
 
 const showPostActions = (post) => {
@@ -174,20 +171,15 @@ const onActionSelect = (action) => {
   showActions.value = false;
 };
 
-const toggleLike = async (post) => {
-  console.log(post.id);
-  const res = await apiPostLike(post.id)
-  console.log(res);
-  // post.isLiked = !post.isLiked;
-  // post.likes += post.isLiked ? 1 : -1;
-  // showToast(post.isLiked ? '点赞成功' : '取消点赞');
-};
+//切换点赞
+const toggleLike = debouncePromise(async (post) => {
+  const {success} = await apiPostLike(post.id)
+  if(success) {
+    post.isLiked = !post.isLiked;
+    post.likeCount += post.isLiked ? 1 : -1;
+  }
+})
 
-const toggleCollect = (post) => {
-  post.isCollected = !post.isCollected;
-  post.collections += post.isCollected ? 1 : -1;
-  showToast(post.isCollected ? '收藏成功' : '取消收藏');
-};
 
 
 
@@ -311,14 +303,12 @@ const previewImage = (images, startPosition) => {
       display: flex;
       justify-content: space-around;
       padding-top: 12px;
-      border-top: 1px solid #f2f3f5;
       
       .action-item {
         display: flex;
         align-items: center;
         gap: 4px;
         padding: 8px 12px;
-        border-radius: 20px;
         transition: all 0.2s ease;
         
         &:active {

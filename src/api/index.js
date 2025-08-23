@@ -1,5 +1,10 @@
+//user
+export {
+    apiGetMyInfo,
+    apiUpdateMyInfo
 
-export {getMyInfo} from './user'
+} from './user'
+//login
 export {
     apiLogin,
     apiLoginByCode,
@@ -8,11 +13,13 @@ export {
     apiRegister,
     apiSendCode,
 } from './login'
+//post
 export {
     apiCreatePost,
     apiGetPostList,
     apiPostLike,
 } from './post'
+//file
 export {
     uploadImage
 } from './file'

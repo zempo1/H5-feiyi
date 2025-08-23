@@ -2,9 +2,10 @@
   <div class="container">
     <div class="login" @click="login">
       <div class="avatar">
-        <img src="../../assets/icon/User-Circle.png">
+
+        <img :src="userStore.avatarUrl ? userStore.avatarUrl : '../../assets/icon/User-Circle.png'">
       </div>
-      <span class="name">{{userStore.refreshToken ? userStore.userName : '请点击登录'}}</span>
+      <span class="name">{{userStore.refreshToken ? userStore.nickName : '请点击登录'}}</span>
     </div>
     <div class="group">
       <div class="list">
@@ -15,8 +16,8 @@
         <img src="../../assets/icon/badge.svg"> 
         <span class="text">我的徽章</span>
       </div>
-      <div class="list">
-        <img src="../../assets/icon/Settings.svg" alt=""> 
+      <div class="list" @click="router.push('/myInfo')">
+        <img src="../../assets/icon/Settings.svg"> 
         <span class="text">账户设置</span>             
       </div>
        <div class="list" @click="logout">
@@ -76,6 +77,8 @@ const logout = async () => {
     img {
         width: 100%;
         height: 100%;
+        border-radius: 30%;
+        object-fit: cover;
     }
 }
 .group {

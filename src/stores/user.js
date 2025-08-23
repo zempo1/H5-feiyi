@@ -15,9 +15,9 @@ export const useuserStore = defineStore('user',()=>{
       refreshToken.value = token
     }
     const setUserInfo = (user) => {
-      userName.value = user.username
-      nickName.value = user.nickname
-      avatarUrl.value = user.avatarUrl
+      if(user.username) userName.value = user.username
+      if(user.nickname) nickName.value = user.nickname
+      if(user.avatarUrl) avatarUrl.value = user.avatarUrl
     }
     
     const removeToken = () => {

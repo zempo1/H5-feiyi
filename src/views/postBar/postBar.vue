@@ -15,12 +15,20 @@
         <van-tabs v-model:active="activeTab" sticky :offset-top ="searchHeaderHeight" @click-tab="onClickTab">
           <van-tab ref="tabs" title="精华" name="essence">
             <div class="tab-content">
-              <post-list @load="onLoad" @onRefresh="onRefresh" :posts="essencePosts" :searchHeaderHeight="searchHeaderHeight" :tabsHeight="tabsHeight" />
+              <post-list
+                @load="onLoad" 
+                @onRefresh="onRefresh" 
+                :finished="uiPost.essenceEmpty" 
+                v-model:loading="uiPost.loading" 
+                :posts="essencePosts" 
+                :searchHeaderHeight="searchHeaderHeight" 
+                :tabsHeight="tabsHeight" 
+              />
             </div>
           </van-tab>
           <van-tab title="热门" name="hot">
             <div class="tab-content">
-              <post-list :posts="hotPosts" :searchHeaderHeight="searchHeaderHeight" :tabsHeight="tabsHeight" />
+              <post-list :posts="hotPosts"  :searchHeaderHeight="searchHeaderHeight" :tabsHeight="tabsHeight" />
             </div>
           </van-tab>
           <van-tab title="最新" name="latest">
@@ -94,13 +102,36 @@ import router from '@/router';
 
 class UIPost {
   constructor() {
+    this.essencePage = 0;
+    this.essenceSize = 3
+    this.essenceTotalPages = 1
+    this.essenceEmpty = false
+    this.loading = false //组件的
+    this.isLoading = false //用于防抖
   }
 
   async getPostList(params) {
-    const res = await apiGetPostList(params);
-    console.log(res);
-    essencePosts.value = [...essencePosts.value,...res.data.content]
-    console.log(essencePosts.value);
+    if(this.essenceEmpty || this.isLoading) {
+      console.log('返回');
+      return;
+    }
+    try {
+      uiPost.loading = true
+      this.isLoading = true
+      const res = await apiGetPostList(params);
+      console.log(res);
+      essencePosts.value = [...essencePosts.value,...res.data.content]
+      this.essencePage ++;
+      this.essenceTotalPages = res.data.totalPages
+      if(this.essencePage > this.essenceTotalPages) this.essenceEmpty = true
+      console.log(essencePosts.value);
+    } catch (error) {
+      console.log(error);
+    }finally {
+      uiPost.loading = false
+      this.isLoading = false
+    }
+
   }
 
 }
@@ -108,10 +139,26 @@ const uiPost = new UIPost();
 
 const onRefresh = () => {
   console.log('子调用父方法');
+  if(activeTab.value === 'essence') {
+    uiPost.essencePage = 0;
+    uiPost.essenceEmpty = false
+    essencePosts.value = []
+    uiPost.getPostList({
+      page: 0,
+      size: uiPost.essenceSize
+    })
+    // uiPost.getPostList({
+    //   page: 0,
+    //   size: 5
+    // })
+  }
 }
 
 const onLoad = () => {
-  console.log('onLoad');
+  uiPost.getPostList({
+    page: uiPost.essencePage,
+    size: uiPost.essenceSize
+  })
 }
 
 //计算ref为searchHeader的盒子的高度
@@ -125,10 +172,11 @@ onMounted( async() => {
   tabsHeight.value = tabs.value.$el.offsetTop;
    uiPost.getPostList({
     page: 0,
-    size: 5
+    size: uiPost.essenceSize
   })
 });
 
+//切换类型
 const onClickTab = (e) => {
   console.log(e);
 }
@@ -136,72 +184,9 @@ const onClickTab = (e) => {
 const activeTab = ref('essence');
 const showPostDialog = ref(false);
 
-// 新帖子数据
-const newPost = reactive({
-  title: '',
-  content: '',
-  images: []
-});
 
-// 模拟帖子数据
-const essencePosts = ref([
-  // {
-  //   id: 1,
-  //   avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-  //   nickname: '非遗传承人',
-  //   time: '2小时前',
-  //   title: '传统手工艺的魅力',
-  //   content: '今天想和大家分享一些传统手工艺的制作过程，这些技艺承载着深厚的文化内涵...',
-  //   images: ['https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'],
-  //   likes: 128,
-  //   comments: 32,
-  //   collections: 15,
-  //   isLiked: false,
-  //   isCollected: false
-  // },
-  // {
-  //   id: 2,
-  //   avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-  //   nickname: '文化爱好者',
-  //   time: '4小时前',
-  //   title: '校园非遗文化节精彩回顾',
-  //   content: '刚刚结束的校园非遗文化节真是太精彩了！各种传统技艺展示让人大开眼界...',
-  //   images: ['https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'],
-  //   likes: 89,
-  //   comments: 18,
-  //   collections: 8,
-  //   isLiked: true,
-  //   isCollected: false
-  // },
-  // {
-  //   id: 3,
-  //   avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-  //   nickname: '文化爱好者',
-  //   time: '4小时前',
-  //   title: '校园非遗文化节精彩回顾',
-  //   content: '刚刚结束的校园非遗文化节真是太精彩了！各种传统技艺展示让人大开眼界...',
-  //   images: ['https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'],
-  //   likes: 89,
-  //   comments: 18,
-  //   collections: 8,
-  //   isLiked: true,
-  //   isCollected: false
-  // },
-  //  {
-  //   id: 4,
-  //   avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-  //   nickname: '文化爱好者',
-  //   time: '4小时前',
-  //   title: '校园非遗文化节精彩回顾',
-  //   content: '刚刚结束的校园非遗文化节真是太精彩了！各种传统技艺展示让人大开眼界...',
-  //   images: ['https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'],
-  //   likes: 89,
-  //   comments: 18,
-  //   collections: 8,
-  //   isLiked: true,
-  //   isCollected: false
-  // }
-]);
+//四种类型的帖子
+const essencePosts = ref([]);
 
 const hotPosts = ref([
   {
@@ -258,36 +243,107 @@ const hotPosts = ref([
 
 const latestPosts = ref([
   {
-    id: 4,
-    avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    nickname: '新用户',
-    time: '30分钟前',
-    title: '第一次体验传统陶艺',
-    content: '今天第一次尝试制作陶艺，虽然手法还很生疏，但感受到了传统工艺的魅力...',
-    images: ['https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'],
-    likes: 12,
-    comments: 3,
-    collections: 2,
-    isLiked: false,
-    isCollected: false
+     "id": 1943635217659072512,
+        "title": "看看潮汕英歌舞",
+        "content": "老铁们，今天和王力宏来到了潮汕潮安区，来看看这英歌舞这么个事",
+        "type": "IMAGE",
+        "status": "PUBLISHED",
+        "images": [
+            "https://loremflickr.com/400/400?lock=7326805739230008"
+        ],
+        "tags": [
+            "英歌舞",
+            "潮汕",
+            "甜妹"
+        ],
+        "viewCount": 0,
+        "likeCount": 0,
+        "commentCount": 0,
+        "shareCount": 0,
+        "isTop": false,
+        "isHot": false,
+        "createdAt": [
+            2025,
+            7,
+            11,
+            19,
+            35,
+            21,
+            543812000
+        ],
+        "updatedAt": [
+            2025,
+            7,
+            11,
+            19,
+            35,
+            21,
+            543812000
+        ],
+        "author": {
+            "id": 1939884796922695680,
+            "username": "mobile_13709670518",
+            "nickname": "Aseubel",
+            "avatar": null,
+            "level": 1,
+            "isActive": true
+        },
+        "interestTags": [],
+        "isLiked": false,
+        "isFollowingAuthor": false
   }
 ]);
 
 const videoPosts = ref([
-  {
-    id: 5,
-    avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    nickname: '视频创作者',
-    time: '2小时前',
-    title: '传统木雕技艺展示',
-    content: '通过视频展示传统木雕的制作过程，让大家更直观地了解这项技艺...',
-    images: ['https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg'],
-    likes: 156,
-    comments: 28,
-    collections: 12,
-    isLiked: false,
-    isCollected: false,
-    isVideo: true
+ {
+     "id": 1943635217659072512,
+        "title": "看看潮汕英歌舞",
+        "content": "老铁们，今天和王力宏来到了潮汕潮安区，来看看这英歌舞这么个事",
+        "type": "IMAGE",
+        "status": "PUBLISHED",
+        "images": [
+            "https://loremflickr.com/400/400?lock=7326805739230008"
+        ],
+        "tags": [
+            "英歌舞",
+            "潮汕",
+            "甜妹"
+        ],
+        "viewCount": 0,
+        "likeCount": 0,
+        "commentCount": 0,
+        "shareCount": 0,
+        "isTop": false,
+        "isHot": false,
+        "createdAt": [
+            2025,
+            7,
+            11,
+            19,
+            35,
+            21,
+            543812000
+        ],
+        "updatedAt": [
+            2025,
+            7,
+            11,
+            19,
+            35,
+            21,
+            543812000
+        ],
+        "author": {
+            "id": 1939884796922695680,
+            "username": "mobile_13709670518",
+            "nickname": "Aseubel",
+            "avatar": null,
+            "level": 1,
+            "isActive": true
+        },
+        "interestTags": [],
+        "isLiked": false,
+        "isFollowingAuthor": false
   }
 ]);
 
@@ -306,30 +362,7 @@ const submitPost = () => {
     return;
   }
   
-  // 模拟发布帖子
-  const post = {
-    id: Date.now(),
-    avatar: 'https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg',
-    nickname: '我',
-    time: '刚刚',
-    title: newPost.title,
-    content: newPost.content,
-    images: newPost.images.map(img => img.url || img.content),
-    likes: 0,
-    comments: 0,
-    collections: 0,
-    isLiked: false,
-    isCollected: false
-  };
-  
-  latestPosts.value.unshift(post);
-  showSuccessToast('发布成功');
-  showPostDialog.value = false;
-  
-  // 重置表单
-  newPost.title = '';
-  newPost.content = '';
-  newPost.images = [];
+
 };
 
 </script>

@@ -1,6 +1,12 @@
 <template>
   <div class="publish-container">
-    <van-nav-bar title="发布帖子" @click-left="goBack" left-arrow safe-area-inset-top/>
+    <van-nav-bar 
+      title="发布帖子"
+      @click-left="goBack" 
+      left-arrow 
+      safe-area-inset-top 
+      fixed
+      placeholder/>
     <div class="form-section">
       <van-field
         v-model="formData.title"
