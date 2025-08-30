@@ -12,7 +12,14 @@
       
       <!-- 分类标签 -->
       <div class="category-tabs">
-        <van-tabs v-model:active="activeTab" sticky :offset-top ="searchHeaderHeight" @click-tab="onClickTab">
+        <van-tabs
+          v-model:active="activeTab" 
+          type="card" 
+          color="#997a41"
+          sticky 
+          :offset-top ="searchHeaderHeight" 
+          @click-tab="onClickTab"
+        >
           <van-tab ref="tabs" title="精华" name="essence">
             <div class="tab-content">
               <post-list
@@ -379,7 +386,7 @@ const submitPost = () => {
   
   .category-tabs {
     background-color: #f3efe8;
-
+    margin-top: 10px;
   }
   
   .tab-content {

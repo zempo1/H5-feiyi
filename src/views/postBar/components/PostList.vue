@@ -1,4 +1,4 @@
- <template>
+<template>
   <div class="post-list"  :style="contentStyle">
     <van-pull-refresh v-model="refreshing" @refresh="onRefresh" success-text="刷新成功" >
         <van-list
@@ -8,9 +8,8 @@
         @load="onLoad"
         :loading = "loading"
         offset="10"
-        :immediate-check="false"
         >
-          <div v-for="post in posts" :key="post.id" class="post-card">
+          <div v-for="post in posts" :key="post.id" class="post-card"  @click="gotoDetail(post)">
             <!-- 用户信息 -->
             <div class="post-header">
               <div class="user-info">
@@ -26,7 +25,7 @@
                   <div class="time">{{ post.time }}</div>
                 </div>
               </div>
-              <van-icon name="ellipsis" class="more-icon" @click="showPostActions(post)" />
+              <van-icon name="ellipsis" class="more-icon" @click.stop="showPostActions(post)" />
             </div>
   
             <!-- 帖子内容 -->
@@ -43,7 +42,7 @@
                   width="100"
                   height="100"
                   fit="cover"
-                  @click="previewImage(post.images, index)"
+                  @click.stop="previewImage(post.images, index)"
                 />
                 <div v-if="post.images.length > 3" class="more-images">
                   +{{ post.images.length - 3 }}
@@ -59,7 +58,7 @@
   
             <!-- 互动按钮 -->
             <div class="post-actions">
-              <div class="action-item" @click="toggleLike(post)">
+              <div class="action-item" @click.stop="toggleLike(post)">
                 <van-icon 
                   :name="post.isLiked ? 'like' : 'like-o'" 
                   :class="{ 'liked': post.isLiked }"
@@ -73,7 +72,7 @@
                 <span>{{ post.commentCount }}</span>
               </div>
 
-              <div class="action-item" @click="sharePost(post)">
+              <div class="action-item" @click.stop="sharePost(post)">
                 <van-icon name="share-o" />
                 <span>分享</span>
               </div>
@@ -94,7 +93,8 @@
 </template>
 
 <script setup>
-import { ref, reactive,onMounted,computed } from 'vue';
+import { ref, reactive, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { showToast, showSuccessToast, showImagePreview } from 'vant';
 import {apiPostLike} from '@/api'
 import {debouncePromise} from '@/utils/tool'
@@ -129,11 +129,19 @@ onMounted(() => {
 })
 const contentStyle = computed(() => {
   return {
-    height: `calc(100vh - ${props.searchHeaderHeight}px - ${props.tabsHeight}px - var(--tabbar-height))`,
+    height: `calc(100vh - ${props.searchHeaderHeight}px - ${props.tabsHeight}px - var(--tabbar-height) - 20px)`,
     overflowY: 'auto',
   };
 });
 
+const router = useRouter();
+
+const gotoDetail = (post) => {
+  router.push({
+    name: 'postDetail',
+    params: { id: post.id }
+  });
+}
 // 响应式数据
 const refreshing = ref(false);
 const showActions = ref(false);
@@ -199,7 +207,8 @@ const previewImage = (images, startPosition) => {
 <style lang="scss" scoped>
 .post-list {
   .post-card {
-    background: linear-gradient(to top, #fff, #e3e3e0);
+    // background: linear-gradient(to top, #fff, #e3e3e0);
+    background: linear-gradient(to bottom,#d9b98c,15%,#f7f3e8);
     border-radius: 12px;
     margin-bottom: 12px;
     padding: 16px;

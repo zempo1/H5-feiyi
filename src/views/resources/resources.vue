@@ -27,12 +27,12 @@
           文字
         </div>
       </div>
-      <div>2</div>
-    </div>
+      <div class="list" v-for="item in 50">2</div>
+    </div>  
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref,onMounted,watch } from 'vue';
 
 
 const sift = (e) => {
@@ -41,6 +41,8 @@ const sift = (e) => {
 </script>
 
 <style lang="scss" scoped>
+
+    
 .container {
   min-height: 100vh;
 }
@@ -69,5 +71,6 @@ const sift = (e) => {
     align-items: center;
   }
 }
+
 
 </style>
