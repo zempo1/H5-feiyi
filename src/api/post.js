@@ -86,3 +86,12 @@ export function apiGetLatestComments(params) {
     params
   })
 }
+
+//搜索帖子
+export function apiSearchPost(params) {
+  return request({
+    url: '/api/posts/search',
+    method: 'get',
+    params
+  })
+}

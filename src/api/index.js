@@ -18,8 +18,14 @@ export {
     apiCreatePost,
     apiGetPostList,
     apiPostLike,
+    apiSearchPost
 } from './post'
 //file
 export {
     uploadImage
 } from './file'
+//clock
+export {
+    apiClockIn,
+    apiGetClockInCount
+} from './clock'

@@ -7,7 +7,6 @@
         finished-text="没有更多了"
         @load="onLoad"
         :loading = "loading"
-        offset="10"
         >
           <div v-for="post in posts" :key="post.id" class="post-card"  @click="gotoDetail(post)">
             <!-- 用户信息 -->
@@ -111,7 +110,7 @@ const props = defineProps({
   },
   tabsHeight: {
     type: Number,
-    default: 44
+    default: 0
   },
   // 是否已加载完成
   finished: {

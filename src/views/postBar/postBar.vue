@@ -2,10 +2,12 @@
   <div class="community-page">
     <div>
       <!-- 顶部搜索栏 -->
-      <div class="search-header">
+      <div class="search-header" @click="gotoSearch">
         <van-search
           placeholder="搜索帖子、用户、话题"
           shape="round"
+          background="#f3efe8"
+          
         >
         </van-search>
       </div>
@@ -110,7 +112,7 @@ import router from '@/router';
 class UIPost {
   constructor() {
     this.essencePage = 0;
-    this.essenceSize = 3
+    this.essenceSize = 5
     this.essenceTotalPages = 1
     this.essenceEmpty = false
     this.loading = false //组件的
@@ -119,7 +121,6 @@ class UIPost {
 
   async getPostList(params) {
     if(this.essenceEmpty || this.isLoading) {
-      console.log('返回');
       return;
     }
     try {
@@ -368,9 +369,12 @@ const submitPost = () => {
     showToast('请填写标题和内容');
     return;
   }
-  
-
 };
+
+const gotoSearch = () => {
+  console.log(1);
+  router.push('/search');
+}
 
 </script>
 

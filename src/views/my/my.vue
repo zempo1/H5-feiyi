@@ -2,7 +2,6 @@
   <div class="container">
     <div class="login" @click="login">
       <div class="avatar">
-
         <img :src="userStore.avatarUrl ? userStore.avatarUrl : '../../assets/icon/User-Circle.png'">
       </div>
       <span class="name">{{userStore.refreshToken ? userStore.nickName : '请点击登录'}}</span>

@@ -31,7 +31,7 @@ export default defineConfig({
     },
   },
   server: {
-    host: '192.168.0.102',
+    host: '192.168.0.103',
     port: "8080",
     proxy: {
       '/api': {
